@@ -1,18 +1,22 @@
 const articlesContainer = document.querySelector('#articles-container');
 
+function getArticleIdFromUrl() {
+  return 'ljbljb';
+}
+
 /**
- * @return {array} Articles array
+ * @return {object} Article
  */
-async function getArticles() {
+async function getArticle(id) {
   try {
-    const response = await fetch('http://localhost:3000/api/article/', {
+    const response = await fetch(`http://localhost:3000/api/article/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
     });
     if (response.status !== 200) {
-      return [];
+      return null;
     }
     const res = await response.json();
     return res.data;
@@ -41,6 +45,6 @@ function displayArticles(articles) {
 }
 
 (async function () {
-  const articles = await getArticles();
-  displayArticles(articles);
+  const articleId = getArticleIdFromUrl();
+  const article = await getArticle(id);
 })();

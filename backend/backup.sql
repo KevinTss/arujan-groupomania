@@ -23,3 +23,19 @@ CHANGE COLUMN `name` `username` VARCHAR(45) NULL DEFAULT NULL ;
 
 ALTER TABLE `groupomania`.`users` 
 CHANGE COLUMN `password` `password` VARCHAR(120) NULL DEFAULT NULL ;
+
+CREATE TABLE `groupomania`.`articles` (
+  `id_article` INT NOT NULL AUTO_INCREMENT,
+  `id_user` INT NOT NULL,
+  `title` VARCHAR(45) NULL,
+  `description` VARCHAR(600) NULL,
+  PRIMARY KEY (`id_article`),
+  CONSTRAINT `id_user`
+	FOREIGN KEY (`id_user`)
+    REFERENCES `groupomania`.`users` (`id_user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+ALTER TABLE `groupomania`.`articles` 
+  ADD COLUMN `image_url` VARCHAR(120) NULL AFTER `description`,
+  ADD COLUMN `posted_date` DATETIME NULL AFTER `image_url`;
