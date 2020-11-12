@@ -3,9 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const db = require('../database');
 
-// get auth user
 exports.me = (req, res) => {
-  // req.user = user en db
   res.status(200).json({
     user: req.user,
   });
