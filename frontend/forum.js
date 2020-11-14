@@ -9,6 +9,7 @@ async function getArticles() {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        authorization: localStorage.getItem('token'),
       },
     });
     if (response.status !== 200) {
@@ -26,14 +27,15 @@ function displayArticles(articles) {
   let content = '';
 
   articles.forEach((article) => {
-    console.log('article titre:', article.title);
     content += `
+    <a href="/Groupomania/frontend/article.html?id=${article.id_article}">
       <div class="article-card">
         <h3>${article.title}</h3>
-        <img src="https://ixxidesign.azureedge.net/media/2393400/ixxi-lila-and-lola-pinguinprint362_lilaxlola_papersize.jpg?width=498" alt="pinguin">
+        <img src="http://localhost:3000/images/${article.image_url}" alt="pinguin">
         <p>${article.description}</p>
         <span>${article.posted_date}</span>
       </div>
+    </a>
     `;
   });
 

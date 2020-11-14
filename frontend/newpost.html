@@ -5,58 +5,59 @@
 		<link rel="stylesheet" href="css/newpost.css">
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+        <script src="js/auth.js"></script>
+		<script src="js/requireAuth.js"></script>
 	</head>
 	<body>
 		<header>
             <a href="index.html"><img src="images/icon-left-font.png" alt="logo_left_groupomania"></a>
 			<nav>
 				<ul>
-                    <a href="forum.html"><li>Forum</li></a>
-					<a href="newpost.html"><li>Nouveau Post</li></a>
-					<a href="profil.html"><li>Mon Profil</li></a>
-					<a href="index.html"><li>Deconnexion</li></a>
+                    <li><a href="forum.html">Forum</a></li>
+					<li><a href="newpost.html">Nouveau Post</a></li>
+					<li><a href="profil.html">Mon Profil</a></li>
+					<li><a href="#" id="disconnect">Deconnexion</a></li>
 				</ul>
 			</nav>	
 		</header>
 		<main>
-			<section id="flexContainer">
-                <div class= container>
-                    <h1>Nouveau Post</h1>
+            <section id="flexContainer">
+                <h1>Nouveau Post</h1>
+                <!-- <form class="container" id="new-post-form"> -->
+                <form class="container" id="new-post-form" action="http://localhost:3000/api/article" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="token" id="hidden-token-input">
+                    <input type="hidden" name="userId" id="hidden-user-id-input">
                     <div class="form-group">
-                        <label>Titre :</label>
-                        <input type="text" id="title" class="form-control">	
+                        <label for="title-input">Titre :</label>
+                        <input type="text" class="form-control" id="title-input" name="title">
                         <span id="erreurTitle" class="erreur"></span>
                     </div>
     
                     <div class="form-group">
-                        <label>Texte :</label>
-                        <textarea></textarea>
+                        <label for="text-input">Texte :</label>
+                        <textarea id="text-input" name="text" placeholder="Description ici..."></textarea>
                         <span id="erreurTexte" class="erreur"></span>	
                     </div>
                     <br><br>
-                    <div><a href = '#' id="btn">Ajouter une image</a></div>
-                    <!--<div class="form-group">
-                        <input type="file" accept="image/*" #imageInput (change)="onFileAdded($event)">
-                        <button mat-raised-button color="primary" (click)="imageInput.click()">ADD IMAGE</button>
-                        <img [src]="imagePreview" *ngIf="imagePreview" style="max-height: 100px;display:block;margin-top:10px">
-                      </div> 
-                    -->
-                </div>
-                <br>
-                <div id="buttons">
-                    <div><a href = 'forum.html' id="btn">Annuler</a></div>
-                    <div><a href = '#' id="btn">Soumettre</a></div>
-                </div>
-                <div>
-
-                </div>
+                    <div class="form-group">
+                        <label for="image-input">Image :</label>
+                        <input type="file" accept="image/*" id="image-input" name="articleImage">
+                    </div>
+                    <br>
+                    <div id="buttons">
+                        <button class="btn" id="annuler">Annuler</button>
+                        <button type="submit" class="btn">Soumettre</button>
+                    </div>
+                </form>
 			</section>					
 		</main>
 		<footer>
 			<div>
 				<a href="index.html"><img src="images/icon-above-font.png" alt="logo_above_groupomania"></a>
 			</div>
-		</footer>
+        </footer>
+        <script src="./js/disconnect.js"></script>
+        <script src="./newpost.js"></script>
 	</body>
 </html>

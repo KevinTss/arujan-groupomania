@@ -38,6 +38,7 @@ async function login(email, password) {
     const jsonResponse = await response.json();
     localStorage.setItem('user', JSON.stringify(jsonResponse.user));
   } catch (err) {
-    console.log('User non connecté');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
   }
 })();

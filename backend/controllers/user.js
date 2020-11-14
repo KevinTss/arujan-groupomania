@@ -62,7 +62,6 @@ exports.login = async (req, res, next) => {
       'SELECT * FROM USERS WHERE email = ?',
       [email],
       async (error, results) => {
-        // console.log('results', results);
         if (
           !results ||
           !(await bcrypt.compare(password, results[0].password))
@@ -81,16 +80,6 @@ exports.login = async (req, res, next) => {
             }
           );
 
-          //   console.log('The token is: ' + token);
-
-          //   const cookieOptions = {
-          //     expires: new Date(
-          //       Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000
-          //     ),
-          //     httpOnly: true,
-          //   };
-
-          //   res.cookie('jwt, token, cookieOptions ');
           return res.status(200).json({
             message: 'Utilisateur connecté',
             token: token,

@@ -39,3 +39,19 @@ CREATE TABLE `groupomania`.`articles` (
 ALTER TABLE `groupomania`.`articles` 
   ADD COLUMN `image_url` VARCHAR(120) NULL AFTER `description`,
   ADD COLUMN `posted_date` DATETIME NULL AFTER `image_url`;
+
+CREATE TABLE `groupomania`.`comments` (
+  `id_comment` INT NOT NULL AUTO_INCREMENT,
+  `id_article` INT NOT NULL,
+  `id_user` INT NOT NULL,
+  `body` text NULL,
+  `post_date` datetime NULL,
+  PRIMARY KEY (`id_comment`),
+  CONSTRAINT `comment_id_article`
+	FOREIGN KEY (`id_article`)
+    REFERENCES `groupomania`.`articles` (`id_article`),
+  CONSTRAINT `comment_id_user`
+	FOREIGN KEY (`id_user`)
+    REFERENCES `groupomania`.`users` (`id_user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);

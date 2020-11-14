@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const db = require('../database');
 
 // récupérer tous les articles
@@ -11,31 +12,74 @@ exports.getAllArticles = (req, res, next) => {
 
 // créer un article
 exports.createArticle = (req, res, next) => {
-  const { title, description, id_user } = req.body;
+  const { title, text: description, token, userId } = req.body;
 
-  const today = new Date();
-  const dd = String(today.getDate()).padStart(2, '0');
-  const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-  const yyyy = today.getFullYear();
-  const hour = String(today.getHours()).padStart(2, '0');
-  const min = String(today.getMinutes()).padStart(2, '0');
-  const sec = String(today.getSeconds()).padStart(2, '0');
-
-  const date = `${yyyy}-${mm}-${dd} ${hour}:${min}:${sec}`;
+  if (!userId) {
+    return res.status(400).json({
+      message: 'Not authorized',
+    });
+  }
+  if (!title || !description) {
+    return res.status(400).json({
+      message: 'Title and description required',
+    });
+  }
+  if (!req.file) {
+    return res.status(400).json({
+      message: 'Image required',
+    });
+  }
 
   db.query(
-    'INSERT INTO articles SET ?',
-    { title, description, posted_date: date, id_user },
-    async (error) => {
-      if (error) {
-        return res.status(500).json({
-          messageIntern: error.message,
-          messagePublic: "Un erreur s'est produite, réessayer plus tard",
+    'SELECT * FROM users WHERE id_user = ?',
+    [userId],
+    async (err, results) => {
+      if (err) {
+        return res.status(400).json({
+          message: err.message,
         });
       }
+      const user = results[0];
 
-      return res.status(200).json({
-        message: 'Article correctement créé',
+      jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
+        if (error) {
+          return res.status(401).json({
+            message: error.message,
+          });
+        }
+
+        const today = new Date();
+        const dd = String(today.getDate()).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        const yyyy = today.getFullYear();
+        const hour = String(today.getHours()).padStart(2, '0');
+        const min = String(today.getMinutes()).padStart(2, '0');
+        const sec = String(today.getSeconds()).padStart(2, '0');
+
+        const date = `${yyyy}-${mm}-${dd} ${hour}:${min}:${sec}`;
+
+        db.query(
+          'INSERT INTO articles SET ?',
+          {
+            title,
+            description,
+            posted_date: date,
+            id_user: userId,
+            image_url: `${req.file.filename}`,
+          },
+          async (error) => {
+            if (error) {
+              return res.status(500).json({
+                messageIntern: error.message,
+                messagePublic: "Un erreur s'est produite, réessayer plus tard",
+              });
+            }
+
+            return res.redirect(
+              `http://127.0.0.1:5500/Groupomania/frontend/forum.html`
+            );
+          }
+        );
       });
     }
   );
@@ -45,9 +89,20 @@ exports.createArticle = (req, res, next) => {
 exports.getOneArticle = (req, res, next) => {
   const articleId = req.params.id;
 
-  return res.status(200).json({
-    id: articleId,
-  });
+  db.query(
+    `SELECT * FROM articles WHERE id_article = ?`,
+    [articleId],
+    async (error, results) => {
+      if (error) {
+        return res.status(404).json({
+          message: 'No article found',
+        });
+      }
+      return res.status(200).json({
+        data: results[0],
+      });
+    }
+  );
 };
 
 //modifier un article

@@ -1,5 +1,8 @@
-const user = JSON.parse(localStorage.getItem('user'));
+{
+  const token = localStorage.getItem('token');
+  const user = localStorage.getItem('user');
 
-if (!user) {
-  window.location.replace('/Groupomania/frontend/login.html');
+  if (!user && !token) {
+    window.location.replace('/Groupomania/frontend/login.html');
+  }
 }
