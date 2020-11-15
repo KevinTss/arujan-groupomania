@@ -3,6 +3,6 @@
   const user = localStorage.getItem('user');
 
   if (!user && !token) {
-    window.location.replace('/Groupomania/frontend/login.html');
+    window.location.replace('/frontend/login.html');
   }
 }

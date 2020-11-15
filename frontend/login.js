@@ -15,7 +15,7 @@ loginForm.addEventListener('submit', async (e) => {
     } else {
       auth = response.user;
     }
-    window.location.replace('/Groupomania/frontend/forum.html');
+    window.location.replace('/frontend/forum.html');
   } else {
     localStorage.removeItem('token');
     localStorage.removeItem('user');

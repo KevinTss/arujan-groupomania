@@ -18,7 +18,7 @@ loginForm.addEventListener('submit', async (e) => {
     } else {
       auth = response.user;
     }
-    window.location.replace('/Groupomania/frontend/forum.html');
+    window.location.replace('/frontend/forum.html');
   } else {
     // afficher un message d'erreur
   }
