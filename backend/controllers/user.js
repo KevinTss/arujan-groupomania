@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const path = require('path');
 
 const db = require('../database');
 
@@ -12,6 +14,20 @@ exports.me = (req, res) => {
 //Création d'un utilisateur
 exports.signup = (req, res) => {
   const { username, email, password } = req.body;
+
+  let test_email = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,5})+$/;
+  let test_password = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/;
+
+  if (!email.match(test_email)) {
+    return res.status(401).json({
+      message: "L'email est invalide",
+    });
+  }
+  if (!password.match(test_password)) {
+    return res.status(401).json({
+      message: 'Le mote passe est invalide',
+    });
+  }
 
   db.query(
     'SELECT email from users WHERE email = ?',
@@ -93,8 +109,109 @@ exports.login = async (req, res, next) => {
   }
 };
 
+exports.getUsersByIds = (req, res) => {
+  const ids = req.params.ids;
+  const idsarray = ids.split('-');
+
+  const users = [];
+
+  idsarray.forEach(async (id, index, i) => {
+    const long = i.length;
+    const isLastRound = long === index + 1;
+    db.query(`SELECT * FROM users WHERE id_user = ?`, [id], (err, result) => {
+      if (!err) {
+        console.log('res', result[0]);
+        if (result[0]) {
+          users.push(result[0]);
+        }
+
+        if (isLastRound) {
+          return res.status(200).json({
+            users,
+          });
+        }
+      }
+    });
+  });
+};
+
 //Mofifier un utilisateur
 exports.modifyUser = (req, res, next) => {};
 
 //Supprimer un utilisateur
-exports.deleteUser = (req, res, next) => {};
+exports.deleteUser = (req, res, next) => {
+  const authUser = req.user;
+  const userIdToDelete = req.params.id;
+
+  if (!req.user) {
+    return res.status(401).json({
+      message: 'You should authenticated',
+    });
+  }
+
+  if (Number(authUser.id_user) !== Number(userIdToDelete)) {
+    return res.status(401).json({
+      message: 'Permission denied',
+    });
+  }
+
+  // to change
+  db.query(
+    `DELETE FROM comments WHERE id_user = ?`,
+    [userIdToDelete],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          message: err.message,
+        });
+      }
+
+      db.query(
+        `SELECT * FROM articles WHERE id_user = ?`,
+        [userIdToDelete],
+        (err, result) => {
+          if (err) {
+            return res.status(500).json({
+              message: err.message,
+            });
+          }
+
+          const imgToDelete = result.map((item) => item.image_url);
+          imgToDelete.forEach((imageName) => {
+            const fileToDelete = publicDirectory + imageName;
+            fs.unlinkSync(fileToDelete);
+          });
+
+          db.query(
+            `DELETE FROM articles WHERE id_user = ?`,
+            [userIdToDelete],
+            (err, result) => {
+              if (err) {
+                return res.status(500).json({
+                  message: err.message,
+                });
+              }
+
+              db.query(
+                `DELETE FROM users WHERE id_user = ?`,
+                [userIdToDelete],
+                (err, result) => {
+                  if (err) {
+                    console.log('++4');
+                    return res.status(500).json({
+                      message: err.message,
+                    });
+                  }
+
+                  return res.status(200).json({
+                    message: 'Account deleted',
+                  });
+                }
+              );
+            }
+          );
+        }
+      );
+    }
+  );
+};

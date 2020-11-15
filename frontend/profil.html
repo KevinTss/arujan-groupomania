@@ -7,13 +7,14 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
 		<script src="js/auth.js"></script>
+		<script src="js/requireAuth.js"></script>
 	</head>
 	<body>
 		<header>
-            <a href="index.html"><img src="images/icon-left-font.png" alt="logo_left_groupomania"></a>
+      <a href="index.html"><img src="images/icon-left-font.png" alt="logo_left_groupomania"></a>
 			<nav>
 				<ul>
-                    <a href="forum.html"><li>Forum</li></a>
+      		<a href="forum.html"><li>Forum</li></a>
 					<a href="newpost.html"><li>Nouveau Post</li></a>
 					<a href="profil.html"><li>Mon Profil</li></a>
 					<a href="index.html"><li>Deconnexion</li></a>
@@ -22,25 +23,13 @@
 		</header>
 		<main>
 			<section id="flexContainer">
-                    <div class= container>
-						<div class="profileBox">
+          <div class= container>
+						<form class="profileBox" id="profile-form">
 							<h1>Nom d'utilisateur</h1>
-							<div class="form-group">
-								<label>Adresse e-mail :</label>
-								<input type="text" name="" id="email" class="form-control">
-								<span id="erreuremail" class="erreur"></span>	
-							</div> 
-
-							<div class="form-group">
-								<label>Mot de Passe :</label>
-								<input type="password" id="password" class="form-control">
-								<span id="erreurPassword" class="erreur"></span>	
-							</div>
-							
 							<div id="buttons">
-								<div><a href = '#' id="btn">Supprimer</a></div>
+								<button type="submit" class="btn">Supprimer mon compte</button>
 							</div>
-						</div>
+						</form>
 					</div>
 			</section>					
 		</main>
@@ -49,5 +38,6 @@
 				<a href="index.html"><img src="images/icon-above-font.png" alt="logo_above_groupomania"></a>
 			</div>
 		</footer>
+		<script src="./profil.js"></script>
 	</body>
 </html>

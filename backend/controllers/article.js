@@ -75,9 +75,7 @@ exports.createArticle = (req, res, next) => {
               });
             }
 
-            return res.redirect(
-              `http://127.0.0.1:5500/Groupomania/frontend/forum.html`
-            );
+            return res.redirect(`http://127.0.0.1:5500/frontend/forum.html`);
           }
         );
       });
@@ -100,6 +98,26 @@ exports.getOneArticle = (req, res, next) => {
       }
       return res.status(200).json({
         data: results[0],
+      });
+    }
+  );
+};
+
+//modifier un article
+exports.getArticleComments = (req, res, next) => {
+  const articleId = req.params.id;
+
+  db.query(
+    `SELECT * FROM comments WHERE id_article = ?`,
+    [articleId],
+    async (error, results) => {
+      if (error) {
+        return res.status(404).json({
+          message: error.message,
+        });
+      }
+      return res.status(200).json({
+        data: results,
       });
     }
   );
