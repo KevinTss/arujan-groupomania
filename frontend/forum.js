@@ -28,7 +28,7 @@ function displayArticles(articles) {
 
   articles.forEach((article) => {
     content += `
-    <a href="/Groupomania/frontend/article.html?id=${article.id_article}">
+    <a href="/frontend/article.html?id=${article.id_article}">
       <div class="article-card">
         <h3>${article.title}</h3>
         <img src="http://localhost:3000/images/${article.image_url}" alt="pinguin">
